@@ -10,6 +10,13 @@ public class ValidateData {
         return true;
     }
 
+    public static boolean number(Integer value, String fieldName) {
+        if (value == null) {
+            createException(fieldName);
+        }
+        return true;
+    }
+
     public static boolean number(Long value, String fieldName) {
         if (value == null) {
             createException(fieldName);
