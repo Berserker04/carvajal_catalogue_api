@@ -4,6 +4,7 @@ import com.carvajal.client.gatewey.out.ClientRepository;
 import com.carvajal.client.properties.Password;
 import com.carvajal.commons.properties.State;
 import com.carvajal.helpers.ConvertString;
+import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.gatewey.in.ProductUseCase;
 import com.carvajal.product.gatewey.out.ProductRepository;
 import com.carvajal.product.properties.Slug;
@@ -26,10 +27,10 @@ public class ProductUseCaseImp implements ProductUseCase {
     }
 
     @Override
-    public Flux<Product> getProductAll() { return productRepository.getProductAll(); }
+    public Flux<ProductDto> getProductAll() { return productRepository.getProductAll(); }
 
     @Override
-    public Mono<Product> getProductBySlug(String slug) { return productRepository.findBySlug(slug); }
+    public Mono<ProductDto> getProductBySlug(String slug) { return productRepository.findBySlug(slug); }
 
     @Override
     public Mono<Product> updateProduct(Product product) {

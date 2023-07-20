@@ -1,15 +1,22 @@
 package com.carvajal.product;
 
+import com.carvajal.auth.service.UserDetailsServiceImpl;
 import com.carvajal.client.Client;
 import com.carvajal.client.ClientController;
+import com.carvajal.client.ClientData;
 import com.carvajal.http.ResponseHandler;
+import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.services.ProductService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,10 +50,11 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getProductAll() {
+    public ResponseEntity<?> getProductAll(HttpSession session) {
         logger.info("Product: get all");
         try {
             SecurityContextHolder.getContext().getAuthentication();
+            Client client = (Client) session.getAttribute("userSession");
 
             List<ProductData> result = productService.getProductAll()
                     .flatMap(product -> mapper.toEntityData(product))
@@ -68,7 +76,7 @@ public class ProductController {
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
-            Product result = productService.getProductBySlug(slug).block();
+            ProductDto result = productService.getProductBySlug(slug).block();
 
             if(result == null) return ResponseHandler.success( "Product not found");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());

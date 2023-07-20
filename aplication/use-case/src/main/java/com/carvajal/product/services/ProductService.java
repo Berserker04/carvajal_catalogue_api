@@ -2,6 +2,7 @@ package com.carvajal.product.services;
 
 import com.carvajal.client.gatewey.in.ClientUseCase;
 import com.carvajal.product.Product;
+import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.gatewey.in.ProductUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,10 @@ public class ProductService implements ProductUseCase {
         return productUseCase.createProduct(product);
     }
     @Override
-    public Flux<Product> getProductAll() { return productUseCase.getProductAll(); }
+    public Flux<ProductDto> getProductAll() { return productUseCase.getProductAll(); }
 
     @Override
-    public Mono<Product> getProductBySlug(String slug) {
+    public Mono<ProductDto> getProductBySlug(String slug) {
         return productUseCase.getProductBySlug(slug);
     }
 

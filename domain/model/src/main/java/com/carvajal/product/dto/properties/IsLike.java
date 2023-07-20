@@ -1,4 +1,4 @@
-package com.carvajal.product.properties;
+package com.carvajal.product.dto.properties;
 
 import com.carvajal.commons.ValidateData;
 

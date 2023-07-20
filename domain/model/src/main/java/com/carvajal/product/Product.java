@@ -2,6 +2,7 @@ package com.carvajal.product;
 
 import com.carvajal.commons.properties.Id;
 import com.carvajal.commons.properties.State;
+import com.carvajal.product.dto.properties.IsLike;
 import com.carvajal.product.properties.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,8 @@ public class Product {
     private Image image;
     private Stock stock;
     private State state;
-    private IsLike isLike;
 
-    public Product(Id id, Name name, Slug slug, Price price, Image image, Stock stock, State state, IsLike isLike) {
+    public Product(Id id, Name name, Slug slug, Price price, Image image, Stock stock, State state) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -26,6 +26,5 @@ public class Product {
         this.image = image;
         this.stock = stock;
         this.state = state;
-        this.isLike = isLike;
     }
 }

@@ -1,9 +1,9 @@
 package com.carvajal.product;
 
-import com.carvajal.client.properties.Password;
-import com.carvajal.client.properties.Role;
 import com.carvajal.commons.properties.Id;
 import com.carvajal.commons.properties.State;
+import com.carvajal.product.dto.ProductDto;
+import com.carvajal.product.dto.properties.IsLike;
 import com.carvajal.product.properties.*;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +17,6 @@ public class ProductMapper {
                 .image(product.getImage().getValue())
                 .stock(product.getStock().getValue())
                 .state(product.getState().getValue())
-                .isLike(product.getIsLike().getValue())
                 .build());
     }
 
@@ -32,8 +31,8 @@ public class ProductMapper {
                 .build());
     }
 
-    public final Product toDomainModel(ProductData productData) {
-        return new Product(
+    public final ProductDto toDomainDtoModel(ProductData productData) {
+        return new ProductDto(
                 new Id(productData.getId()),
                 new Name(productData.getName()),
                 new Slug(productData.getSlug()),

@@ -13,7 +13,7 @@ public interface ProductDataRepository extends ReactiveCrudRepository<ProductDat
     @Query("SELECT\n" +
             "     p.*,\n" +
             "     CASE\n" +
-            "         WHEN wl.\"productId\" = p.id THEN true\n" +
+            "         WHEN wl.\"productId\" = p.id AND wl.\"userId\" = 2 THEN true\n" +
             "         ELSE false\n" +
             "     END AS isLike\n" +
             "FROM products p\n" +
@@ -32,7 +32,7 @@ public interface ProductDataRepository extends ReactiveCrudRepository<ProductDat
     @Query("SELECT\n" +
             "     p.*,\n" +
             "     CASE\n" +
-            "         WHEN wl.\"productId\" = p.id THEN true\n" +
+            "         WHEN wl.\"productId\" = p.id AND wl.\"userId\" = 2 THEN true\n" +
             "         ELSE false\n" +
             "     END AS isLike\n" +
             "FROM products p\n" +
