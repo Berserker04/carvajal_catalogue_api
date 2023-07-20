@@ -1,7 +1,9 @@
-package com.carvajal.client;
+package com.carvajal.product;
 
-import com.carvajal.client.services.ClientService;
+import com.carvajal.client.Client;
+import com.carvajal.client.ClientController;
 import com.carvajal.http.ResponseHandler;
+import com.carvajal.product.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,23 +12,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/clients")
-public class ClientController {
-    private final ClientMapper mapper;
-    private final ClientService clientService;
+@RequestMapping("/api/v1/products")
+public class ProductController {
+    private final ProductMapper mapper;
+    private final ProductService productService;
     private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @PostMapping()
-    public ResponseEntity<?> createClient(@RequestBody Client client) {
-        logger.info("Client: creating new client");
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
+        logger.info("Product: creating new product");
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
-            Client result = clientService.createClient(client).block();
+            Product result = productService.createProduct(product).block();
 
-            if(result == null) return ResponseHandler.success( "Can't register client");
+            if(result == null) return ResponseHandler.success( "Can't register product");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block(), HttpStatus.CREATED);
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
@@ -37,14 +42,35 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<?> getClientById(@PathVariable Long email) {
+    @GetMapping()
+    public ResponseEntity<?> getProductAll() {
+        logger.info("Product: get all");
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
-            Client result = clientService.getClientByEmail(email).block();
+            List<ProductData> result = productService.getProductAll()
+                    .flatMap(product -> mapper.toEntityData(product))
+                    .collect(Collectors.toList()).block();
 
-            if(result == null) return ResponseHandler.success( "Client not found");
+            if(result.size() == 0) return ResponseHandler.success("Products not found");
+            return ResponseHandler.success("Success", result);
+        }catch (IllegalArgumentException e){
+            logger.info(e.getMessage());
+            return ResponseHandler.success(e.getMessage());
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseHandler.error("Internal server error");
+        }
+    }
+
+    @GetMapping("/{slug}")
+    public ResponseEntity<?> getProductBySlug(@PathVariable String slug) {
+        try {
+            SecurityContextHolder.getContext().getAuthentication();
+
+            Product result = productService.getProductBySlug(slug).block();
+
+            if(result == null) return ResponseHandler.success( "Product not found");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
@@ -56,13 +82,13 @@ public class ClientController {
     }
 
     @PatchMapping()
-    public ResponseEntity<?> updateClient(@RequestBody Client client) {
+    public ResponseEntity<?> updateProduct(@RequestBody Product product) {
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
-            Client result = clientService.updateClient(client).block();
+            Product result = productService.updateProduct(product).block();
 
-            if(result == null) return ResponseHandler.success( "Could not update client");
+            if(result == null) return ResponseHandler.success( "Could not update product");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
@@ -73,15 +99,15 @@ public class ClientController {
         }
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<?> deleteClient(@PathVariable Long email) {
-        logger.info("Client: deleting client {}", email);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        logger.info("Product: deleting client {}", id);
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
-            Boolean result = clientService.deleteClient(email).block();
+            Boolean result = productService.deleteProduct(id).block();
 
-            if(!result) return ResponseHandler.success( "Can't delete client");
+            if(!result) return ResponseHandler.success( "Can't delete Product");
             return ResponseHandler.success("Success");
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
