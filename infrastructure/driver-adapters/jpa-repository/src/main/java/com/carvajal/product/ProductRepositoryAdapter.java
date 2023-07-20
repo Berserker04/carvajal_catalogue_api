@@ -37,8 +37,8 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public Mono<ProductDto> findBySlug(String slug) {
-        return repository.findBySlug(slug)
+    public Mono<ProductDto> findBySlug(Long userId, String slug) {
+        return repository.findBySlug(userId, slug)
                 .map(mapperShared::toDomainDtoModel);
     }
 

@@ -9,7 +9,7 @@ public interface ProductRepository {
     Mono<Product> save(Product client);
     Flux<ProductDto> getProductAll();
     Mono<Product> findById(Long id);
-    Mono<ProductDto> findBySlug(String slug);
+    Mono<ProductDto> findBySlug(Long userId, String slug);
     Mono<Integer> update(Product product);
     Mono<Boolean> deleteById(Long id);
 }

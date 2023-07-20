@@ -8,9 +8,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 
+import java.util.List;
+
 public interface WishListUseCase {
     Mono<Boolean> addProduct(Long userId, Long productId);
-    Mono<WishListDto> listProducts(Long userId);
+    Mono<Tuple3<List<ProductDto>, List<ProductDto>, List<ProductDto>>> listProducts(Long userId);
 //    Mono<Product> listProductsWithEmptyStock(String filter);
-    Mono<Boolean> deleteProduct(Long productId);
+    Mono<Boolean> deleteProduct(Long userId, Long productId);
 }

@@ -1,5 +1,6 @@
 package com.carvajal.wishlist;
 
+import com.carvajal.commons.Constant;
 import com.carvajal.product.Product;
 import com.carvajal.product.ProductDataRepository;
 import com.carvajal.product.ProductMapper;
@@ -27,7 +28,11 @@ public class WishListRepositoryAdapter implements WishListRepository {
 
     @Override
     public Flux<ProductDto> listProducts(Long userId, String stateFilter) {
-        return repository.findProductsByState(userId, stateFilter)
+        if(stateFilter.equalsIgnoreCase(Constant.STATE_ACTIVE)){
+            return repository.findProductsByState(userId)
+                    .map(mapperShared::toDomainDtoModel);
+        }
+        return repository.findProductsByRemoved(userId)
                 .map(mapperShared::toDomainDtoModel);
     }
 
@@ -38,20 +43,9 @@ public class WishListRepositoryAdapter implements WishListRepository {
     }
 
     @Override
-    public Mono<Boolean> deleteById(Long id) {
-        return repository.findById(id)
-                .flatMap(product -> {
-                    if (product != null) {
-                        repository.deleteProduct(id).subscribe();
-                        return Mono.just(true);
-                    }
-                    return Mono.just(false);
-                });
-    }
-
-    @Override
-    public Mono<Boolean> deleteAllWithEmptyStock(Long userId) {
-        repository.deleteAllWithEmptyStock(userId).subscribe();
-        return Mono.just(true);
+    public Mono<Boolean> deleteById(Long userId, Long productId) {
+        return repository.deleteProduct(userId, productId)
+                .then(Mono.just(true))
+                .onErrorResume(throwable -> Mono.just(false));
     }
 }

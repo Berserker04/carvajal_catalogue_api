@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/v1/health/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/wishlists/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/api/v1/clients").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/api/v1/clients/{email}").authenticated()

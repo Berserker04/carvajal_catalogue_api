@@ -16,9 +16,9 @@ public class WishListData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column("id")
     private Long id;
-    @Column("userId")
+    @Column("\"userId\"")
     private Long userId;
-    @Column("productId")
+    @Column("\"productId\"")
     private Long productId;
     private String state;
 }

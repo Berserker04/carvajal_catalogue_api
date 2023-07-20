@@ -21,8 +21,8 @@ public class ProductService implements ProductUseCase {
     public Flux<ProductDto> getProductAll() { return productUseCase.getProductAll(); }
 
     @Override
-    public Mono<ProductDto> getProductBySlug(String slug) {
-        return productUseCase.getProductBySlug(slug);
+    public Mono<ProductDto> getProductBySlug(Long userId, String slug) {
+        return productUseCase.getProductBySlug(userId, slug);
     }
 
     @Override

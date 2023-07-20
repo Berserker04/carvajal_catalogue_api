@@ -30,7 +30,7 @@ public class ProductUseCaseImp implements ProductUseCase {
     public Flux<ProductDto> getProductAll() { return productRepository.getProductAll(); }
 
     @Override
-    public Mono<ProductDto> getProductBySlug(String slug) { return productRepository.findBySlug(slug); }
+    public Mono<ProductDto> getProductBySlug(Long userId, String slug) { return productRepository.findBySlug(userId, slug); }
 
     @Override
     public Mono<Product> updateProduct(Product product) {

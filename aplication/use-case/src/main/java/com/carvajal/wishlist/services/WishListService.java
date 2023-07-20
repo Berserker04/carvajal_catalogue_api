@@ -12,6 +12,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WishListService implements WishListUseCase {
@@ -22,12 +24,12 @@ public class WishListService implements WishListUseCase {
     }
 
     @Override
-    public Mono<WishListDto> listProducts(Long userId) {
+    public Mono<Tuple3<List<ProductDto>, List<ProductDto>, List<ProductDto>>> listProducts(Long userId) {
         return wishListUseCase.listProducts(userId);
     }
 
     @Override
-    public Mono<Boolean> deleteProduct(Long productId) {
-        return wishListUseCase.deleteProduct(productId);
+    public Mono<Boolean> deleteProduct(Long userId, Long productId) {
+        return wishListUseCase.deleteProduct(userId, productId);
     }
 }

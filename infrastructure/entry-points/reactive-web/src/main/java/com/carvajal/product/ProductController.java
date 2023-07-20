@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ProductController {
     private final ProductMapper mapper;
     private final ProductService productService;
-    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @PostMapping()
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
@@ -72,11 +72,12 @@ public class ProductController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<?> getProductBySlug(@PathVariable String slug) {
+    public ResponseEntity<?> getProductBySlug(HttpSession session, @PathVariable String slug) {
         try {
             SecurityContextHolder.getContext().getAuthentication();
+            Client client = (Client) session.getAttribute("userSession");
 
-            ProductDto result = productService.getProductBySlug(slug).block();
+            ProductDto result = productService.getProductBySlug(client.getId().getValue(), slug).block();
 
             if(result == null) return ResponseHandler.success( "Product not found");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());

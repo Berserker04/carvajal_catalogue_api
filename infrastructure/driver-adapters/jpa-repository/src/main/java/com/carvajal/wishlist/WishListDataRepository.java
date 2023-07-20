@@ -13,8 +13,9 @@ import reactor.core.publisher.Mono;
 public interface WishListDataRepository  extends ReactiveCrudRepository<WishListData, Long> {
 
 
-    @Query("UPDATE WishListData SET state = 'removed' WHERE id = :?")
-    Mono<Integer> deleteProduct(Long id);
+//    @Query("UPDATE wish_lists SET state = 'removed' WHERE state = 'active' AND \"userId\" = :? AND \"productId\" = :?")
+    @Query("UPDATE wish_lists SET state = 'removed' WHERE state = 'active' AND \"userId\" = $1 AND \"productId\" = $2")
+    Mono<Integer> deleteProduct(Long userId, Long productId);
 
     @Query("SELECT \n" +
             "    p.*,\n" +
@@ -25,10 +26,25 @@ public interface WishListDataRepository  extends ReactiveCrudRepository<WishList
             "FROM products p\n" +
             "LEFT JOIN wish_lists wl\n" +
             "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = :? \n" +
-            "AND wl.state = :? \n" +
+            "WHERE wl.\"userId\" = $1 \n" +
+            "AND wl.state = 'active' \n" +
+            "AND p.stock > 0\n" +
             "ORDER BY p.id ASC")
-    Flux<ProductData> findProductsByState(Long userId, String stateFilter);
+    Flux<ProductData> findProductsByState(Long userId);
+
+    @Query("SELECT \n" +
+            "    p.*,\n" +
+            "    CASE \n" +
+            "        WHEN wl.\"productId\" = p.id  THEN True\n" +
+            "        ELSE False\n" +
+            "    END AS isLike\n" +
+            "FROM products p\n" +
+            "LEFT JOIN wish_lists wl\n" +
+            "ON p.id = wl.\"productId\"\n" +
+            "WHERE wl.\"userId\" = $1 \n" +
+            "AND wl.state = 'removed' \n" +
+            "ORDER BY p.id ASC")
+    Flux<ProductData> findProductsByRemoved(Long userId);
 
     @Query("SELECT \n" +
             "    p.*,\n" +
@@ -39,18 +55,10 @@ public interface WishListDataRepository  extends ReactiveCrudRepository<WishList
             "FROM products p\n" +
             "LEFT JOIN wish_lists wl\n" +
             "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = 2 \n" +
+            "WHERE wl.\"userId\" = $1 \n" +
             "AND wl.state = 'active'\n" +
             "AND p.stock = 0\n" +
             "ORDER BY wl.id ASC")
     Flux<ProductData> findProductsWithEmptyStock(Long userId);
-
-    @Query("UPDATE wish_lists wl\n" +
-            "SET state = 'removed'\n" +
-            "FROM products p\n" +
-            "WHERE p.stock = 0\n" +
-            "AND wl.state = 'active'\n" +
-            "AND wl.\"userId\" = :? ")
-    Mono<Integer> deleteAllWithEmptyStock(Long userId);
 
 }

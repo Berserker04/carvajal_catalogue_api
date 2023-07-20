@@ -16,4 +16,5 @@ public class ProductDto extends Product {
         super(id, name, slug, price, image, stock, state);
         this.isLike = isLike;
     }
+
 }

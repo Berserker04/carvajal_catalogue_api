@@ -10,6 +10,5 @@ public interface WishListRepository {
     Mono<WishList> save(WishList wishList);
     Flux<ProductDto> listProducts(Long userId, String stateFilter);
     Flux<ProductDto> listProductsWithEmptyStock(Long userId);
-    Mono<Boolean> deleteById(Long id);
-    Mono<Boolean> deleteAllWithEmptyStock(Long userId);
+    Mono<Boolean> deleteById(Long userId, Long productId);
 }

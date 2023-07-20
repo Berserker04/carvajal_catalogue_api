@@ -1,5 +1,6 @@
 package com.carvajal.wishlist;
 
+import com.carvajal.commons.Constant;
 import com.carvajal.commons.properties.Id;
 import com.carvajal.commons.properties.State;
 import com.carvajal.product.Product;
@@ -12,18 +13,17 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple3;
 
-;import java.util.List;
+;import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class WishListUseCaseImp implements WishListUseCase {
     private final WishListRepository wishListRepository;
 
-    private static final String stateActive = "active";
-    private static final String stateRemove = "removed";
-
     @Override
     public Mono<Boolean> addProduct(Long userId, Long productId) {
-        WishList wishList = new WishList(null, new Id(userId), new Id(productId), new State(stateActive));
+        // validar que no este activo
+        WishList wishList = new WishList(null, new Id(userId), new Id(productId), new State(Constant.STATE_ACTIVE));
         return wishListRepository.save(wishList)
                 .flatMap(wl -> {
                     if (wl == null) return Mono.just(false);
@@ -32,28 +32,32 @@ public class WishListUseCaseImp implements WishListUseCase {
     }
 
     @Override
-    public Mono<WishListDto> listProducts(Long userId) {
-        Mono<List<ProductDto>> productsActiveMono = wishListRepository.listProducts(userId, stateActive)
+    public Mono<Tuple3<List<ProductDto>, List<ProductDto>, List<ProductDto>>> listProducts(Long userId) {
+        Mono<List<ProductDto>> productsActive = wishListRepository.listProducts(userId, Constant.STATE_ACTIVE)
                 .collectList();
-        Mono<List<ProductDto>> productsRemovedMono = wishListRepository.listProducts(userId, stateRemove)
+        Mono<List<ProductDto>> productsWithEmptyStock = wishListRepository.listProductsWithEmptyStock(userId)
                 .collectList();
-        Mono<List<ProductDto>> productsWithEmptyStockMono = wishListRepository.listProductsWithEmptyStock(userId)
+        Mono<List<ProductDto>> productsRemoved = wishListRepository.listProducts(userId, Constant.STATE_REMOVED)
                 .collectList();
 
-        return Mono.zip(productsActiveMono, productsRemovedMono, productsWithEmptyStockMono)
-                .map(tuple -> {
+        return Mono.zip(productsActive, productsWithEmptyStock, productsRemoved)
+                .flatMap(tuple -> {
                     List<ProductDto> productsActiveList = tuple.getT1();
-                    List<ProductDto> productsRemovedList = tuple.getT2();
-                    List<ProductDto> productsWithEmptyStockList = tuple.getT3();
-                    if (!productsWithEmptyStockList.isEmpty()) {
-                        wishListRepository.deleteAllWithEmptyStock(userId).subscribe();
-                    }
-                    return new WishListDto(productsActiveList, productsRemovedList, productsWithEmptyStockList);
+                    List<ProductDto> productsWithEmptyStockList = tuple.getT2();
+                    List<ProductDto> productsRemovedList = tuple.getT3();
+
+                    Flux<Boolean> deleteEmptyStock = Flux.fromIterable(productsWithEmptyStockList)
+                            .flatMap(product -> {
+                                return wishListRepository.deleteById(userId, product.getId().getValue());
+
+                            });
+
+                    return deleteEmptyStock.then(Mono.zip(Mono.just(productsActiveList), Mono.just(productsWithEmptyStockList), Mono.just(productsRemovedList)));
                 });
     }
 
     @Override
-    public Mono<Boolean> deleteProduct(Long productId) {
-        return wishListRepository.deleteById(productId);
+    public Mono<Boolean> deleteProduct(Long userId, Long productId) {
+        return wishListRepository.deleteById(userId, productId);
     }
 }
