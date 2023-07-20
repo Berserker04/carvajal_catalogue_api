@@ -2,6 +2,7 @@ package com.carvajal.product;
 
 import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.gatewey.out.ProductRepository;
+import com.carvajal.shared.mappers.ProductMapperShared;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 public class ProductRepositoryAdapter implements ProductRepository {
 
     private final ProductMapper mapper;
+    private final ProductMapperShared mapperShared;
     private final ProductDataRepository repository;
 
     @Override
@@ -19,25 +21,25 @@ public class ProductRepositoryAdapter implements ProductRepository {
         return Mono.just(product)
                 .flatMap(mapper::toNewEntityData)
                 .flatMap(repository::save)
-                .map(mapper::toDomainDtoModel);
+                .map(mapperShared::toDomainDtoModel);
     }
 
     @Override
     public Flux<ProductDto> getProductAll() {
         return repository.findAll()
-                .map(mapper::toDomainDtoModel);
+                .map(mapperShared::toDomainDtoModel);
     }
 
     @Override
     public Mono<Product> findById(Long id) {
         return repository.findById(id)
-                .map(mapper::toDomainDtoModel);
+                .map(mapperShared::toDomainDtoModel);
     }
 
     @Override
     public Mono<ProductDto> findBySlug(String slug) {
         return repository.findBySlug(slug)
-                .map(mapper::toDomainDtoModel);
+                .map(mapperShared::toDomainDtoModel);
     }
 
     @Override

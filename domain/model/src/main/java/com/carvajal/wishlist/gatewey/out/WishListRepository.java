@@ -8,8 +8,8 @@ import reactor.core.publisher.Mono;
 
 public interface WishListRepository {
     Mono<WishList> save(WishList wishList);
-    Flux<Product> listProducts(String stateFilter);
-    Flux<Product> listProductsWithEmptyStock();
+    Flux<ProductDto> listProducts(Long userId, String stateFilter);
+    Flux<ProductDto> listProductsWithEmptyStock(Long userId);
     Mono<Boolean> deleteById(Long id);
-    Mono<Boolean> deleteAllWithEmptyStock();
+    Mono<Boolean> deleteAllWithEmptyStock(Long userId);
 }

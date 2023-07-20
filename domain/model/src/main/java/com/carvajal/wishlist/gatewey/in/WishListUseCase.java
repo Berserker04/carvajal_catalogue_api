@@ -10,7 +10,7 @@ import reactor.util.function.Tuple3;
 
 public interface WishListUseCase {
     Mono<Boolean> addProduct(Long userId, Long productId);
-    Mono<WishListDto> listProducts();
+    Mono<WishListDto> listProducts(Long userId);
 //    Mono<Product> listProductsWithEmptyStock(String filter);
     Mono<Boolean> deleteProduct(Long productId);
 }

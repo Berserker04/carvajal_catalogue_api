@@ -22,8 +22,8 @@ public class WishListService implements WishListUseCase {
     }
 
     @Override
-    public Mono<WishListDto> listProducts() {
-        return wishListUseCase.listProducts();
+    public Mono<WishListDto> listProducts(Long userId) {
+        return wishListUseCase.listProducts(userId);
     }
 
     @Override

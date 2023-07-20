@@ -32,21 +32,21 @@ public class WishListUseCaseImp implements WishListUseCase {
     }
 
     @Override
-    public Mono<WishListDto> listProducts() {
-        Mono<List<Product>> productsActiveMono = wishListRepository.listProducts(stateActive)
+    public Mono<WishListDto> listProducts(Long userId) {
+        Mono<List<ProductDto>> productsActiveMono = wishListRepository.listProducts(userId, stateActive)
                 .collectList();
-        Mono<List<Product>> productsRemovedMono = wishListRepository.listProducts(stateRemove)
+        Mono<List<ProductDto>> productsRemovedMono = wishListRepository.listProducts(userId, stateRemove)
                 .collectList();
-        Mono<List<Product>> productsWithEmptyStockMono = wishListRepository.listProductsWithEmptyStock()
+        Mono<List<ProductDto>> productsWithEmptyStockMono = wishListRepository.listProductsWithEmptyStock(userId)
                 .collectList();
 
         return Mono.zip(productsActiveMono, productsRemovedMono, productsWithEmptyStockMono)
                 .map(tuple -> {
-                    List<Product> productsActiveList = tuple.getT1();
-                    List<Product> productsRemovedList = tuple.getT2();
-                    List<Product> productsWithEmptyStockList = tuple.getT3();
+                    List<ProductDto> productsActiveList = tuple.getT1();
+                    List<ProductDto> productsRemovedList = tuple.getT2();
+                    List<ProductDto> productsWithEmptyStockList = tuple.getT3();
                     if (!productsWithEmptyStockList.isEmpty()) {
-                        wishListRepository.deleteAllWithEmptyStock().subscribe();
+                        wishListRepository.deleteAllWithEmptyStock(userId).subscribe();
                     }
                     return new WishListDto(productsActiveList, productsRemovedList, productsWithEmptyStockList);
                 });

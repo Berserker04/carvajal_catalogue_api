@@ -30,17 +30,4 @@ public class ProductMapper {
                 .state(product.getState().getValue())
                 .build());
     }
-
-    public final ProductDto toDomainDtoModel(ProductData productData) {
-        return new ProductDto(
-                new Id(productData.getId()),
-                new Name(productData.getName()),
-                new Slug(productData.getSlug()),
-                new Price(productData.getPrice()),
-                new Image(productData.getImage()),
-                new Stock(productData.getStock()),
-                new State(productData.getState()),
-                new IsLike(productData.getIsLike())
-        );
-    }
 }
