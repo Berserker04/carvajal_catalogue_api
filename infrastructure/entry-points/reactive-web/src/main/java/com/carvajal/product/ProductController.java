@@ -81,7 +81,7 @@ public class ProductController {
         }
     }
 
-    @PatchMapping()
+    @PutMapping()
     public ResponseEntity<?> updateProduct(@RequestBody Product product) {
         try {
             SecurityContextHolder.getContext().getAuthentication();

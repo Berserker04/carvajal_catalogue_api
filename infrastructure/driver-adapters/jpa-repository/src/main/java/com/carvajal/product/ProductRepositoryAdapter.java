@@ -47,7 +47,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
                     if(exists){
                         return Mono.just(product)
                                 .flatMap(p->{
-                                    repository.updateFieldsById(
+                                    repository.updateFields(
                                             p.getName().getValue(),
                                             p.getSlug().getValue(),
                                             p.getPrice().getValue(),

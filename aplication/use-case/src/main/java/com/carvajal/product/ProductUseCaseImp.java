@@ -21,7 +21,7 @@ public class ProductUseCaseImp implements ProductUseCase {
     @Override
     public Mono<Product> createProduct(Product product) {
         product.setSlug(new Slug(ConvertString.slug(product.getName().getValue())));
-        product.setState(new State("True"));
+        product.setState(new State("active"));
         return productRepository.save(product);
     }
 
@@ -29,12 +29,11 @@ public class ProductUseCaseImp implements ProductUseCase {
     public Flux<Product> getProductAll() { return productRepository.getProductAll(); }
 
     @Override
-    public Mono<Product> getProductBySlug(String slug) {
-        return productRepository.findBySlug(slug);
-    }
+    public Mono<Product> getProductBySlug(String slug) { return productRepository.findBySlug(slug); }
 
     @Override
-    public Mono<Product> updateProduct(Product product) {;
+    public Mono<Product> updateProduct(Product product) {
+        product.setSlug(new Slug(ConvertString.slug(product.getName().getValue())));
         return productRepository.update(product)
                 .flatMap(result-> {
                     if(result >= 1){

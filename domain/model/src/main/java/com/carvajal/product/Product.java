@@ -16,8 +16,9 @@ public class Product {
     private Image image;
     private Stock stock;
     private State state;
+    private IsLike isLike;
 
-    public Product(Id id, Name name, Slug slug, Price price, Image image, Stock stock, State state) {
+    public Product(Id id, Name name, Slug slug, Price price, Image image, Stock stock, State state, IsLike isLike) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -25,5 +26,6 @@ public class Product {
         this.image = image;
         this.stock = stock;
         this.state = state;
+        this.isLike = isLike;
     }
 }

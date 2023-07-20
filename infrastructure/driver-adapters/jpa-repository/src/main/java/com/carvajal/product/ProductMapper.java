@@ -17,6 +17,7 @@ public class ProductMapper {
                 .image(product.getImage().getValue())
                 .stock(product.getStock().getValue())
                 .state(product.getState().getValue())
+                .isLike(product.getIsLike().getValue())
                 .build());
     }
 
@@ -31,13 +32,6 @@ public class ProductMapper {
                 .build());
     }
 
-//    public final Mono<ProductData> toUpdateEntityData(Product product) {
-//        return Mono.just(ProductData.builder()
-//                .id(product.getId().getValue())
-//                .password(product.getPassword().getValue())
-//                .build());
-//    }
-
     public final Product toDomainModel(ProductData productData) {
         return new Product(
                 new Id(productData.getId()),
@@ -46,6 +40,8 @@ public class ProductMapper {
                 new Price(productData.getPrice()),
                 new Image(productData.getImage()),
                 new Stock(productData.getStock()),
-                new State(productData.getState()));
+                new State(productData.getState()),
+                new IsLike(productData.getIsLike())
+        );
     }
 }
