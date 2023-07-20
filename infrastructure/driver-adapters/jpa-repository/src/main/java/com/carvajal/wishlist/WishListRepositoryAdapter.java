@@ -48,4 +48,10 @@ public class WishListRepositoryAdapter implements WishListRepository {
                 .then(Mono.just(true))
                 .onErrorResume(throwable -> Mono.just(false));
     }
+
+    @Override
+    public Flux<ProductDto> listProductsById(Long userId, Long productId) {
+        return repository.findProductsByIdAndIsActive(userId, productId)
+                .map(mapperShared::toDomainDtoModel);
+    }
 }

@@ -11,4 +11,5 @@ public interface WishListRepository {
     Flux<ProductDto> listProducts(Long userId, String stateFilter);
     Flux<ProductDto> listProductsWithEmptyStock(Long userId);
     Mono<Boolean> deleteById(Long userId, Long productId);
+    Flux<ProductDto> listProductsById(Long userId, Long productId);
 }

@@ -12,10 +12,23 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface WishListDataRepository  extends ReactiveCrudRepository<WishListData, Long> {
 
-
-//    @Query("UPDATE wish_lists SET state = 'removed' WHERE state = 'active' AND \"userId\" = :? AND \"productId\" = :?")
     @Query("UPDATE wish_lists SET state = 'removed' WHERE state = 'active' AND \"userId\" = $1 AND \"productId\" = $2")
     Mono<Integer> deleteProduct(Long userId, Long productId);
+
+    @Query("SELECT \n" +
+            "    p.*,\n" +
+            "    CASE \n" +
+            "        WHEN wl.\"productId\" = p.id  THEN True\n" +
+            "        ELSE False\n" +
+            "    END AS isLike\n" +
+            "FROM products p\n" +
+            "LEFT JOIN wish_lists wl\n" +
+            "ON p.id = wl.\"productId\"\n" +
+            "WHERE wl.\"userId\" = $1 \n" +
+            "AND wl.\"productId\" = $2 \n" +
+            "AND wl.state = 'active' \n" +
+            "ORDER BY p.id ASC")
+    Flux<ProductData> findProductsByIdAndIsActive(Long userId, Long productId);
 
     @Query("SELECT \n" +
             "    p.*,\n" +

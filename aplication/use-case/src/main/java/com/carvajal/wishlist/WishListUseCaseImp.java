@@ -22,14 +22,23 @@ public class WishListUseCaseImp implements WishListUseCase {
 
     @Override
     public Mono<Boolean> addProduct(Long userId, Long productId) {
-        // validar que no este activo
-        WishList wishList = new WishList(null, new Id(userId), new Id(productId), new State(Constant.STATE_ACTIVE));
-        return wishListRepository.save(wishList)
-                .flatMap(wl -> {
-                    if (wl == null) return Mono.just(false);
-                    return Mono.just(true);
+        return wishListRepository.listProductsById(userId, productId)
+                .collectList()
+                .flatMap(list -> {
+                    if (list.isEmpty()) {
+                        WishList wishList = new WishList(null, new Id(userId), new Id(productId), new State(Constant.STATE_ACTIVE));
+                        return wishListRepository.save(wishList)
+                                .flatMap(wl -> {
+                                    if (wl == null) return Mono.just(false);
+                                    return Mono.just(true);
+                                });
+                    } else {
+                        // La lista no está vacía, por lo que el producto ya está en la lista de deseos.
+                        return Mono.just(false);
+                    }
                 });
     }
+
 
     @Override
     public Mono<Tuple3<List<ProductDto>, List<ProductDto>, List<ProductDto>>> listProducts(Long userId) {
