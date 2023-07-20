@@ -24,45 +24,17 @@ public class ClientUseCaseImp implements ClientUseCase {
         String encodePassword = encryptPassword(client.getPassword().getValue());
         client.setPassword(new Password(encodePassword));
 //        client.setEmail(new Email(generateEmail()));
-        client.setState(new State("True"));
+        client.setState(new State("Active"));
         client.setRole(new Role("CLIENT"));
         return clientRepository.save(client);
     }
 
     @Override
-    public Mono<Client> getClientByEmail(Long id) {
-        return clientRepository.findByEmail(id);
-    }
-
-    @Override
-    public Mono<Client> updateClient(Client client) {
-        String encodePassword = encryptPassword(client.getPassword().getValue());
-        client.setPassword(new Password(encodePassword));
-        return clientRepository.update(client)
-                .flatMap(result-> {
-                    if(result >= 1){
-                        return clientRepository.findById(client.getId().getValue());
-                    }
-                    return null;
-                });
-    }
-
-    @Override
-    public Mono<Boolean> deleteClient(Long email) {
-        return clientRepository.deleteById(email);
+    public Mono<Client> getClientByEmail(String email) {
+        return clientRepository.findByEmail(email);
     }
 
     public String encryptPassword(String password) {
         return  bCryptPasswordEncoder.encode(password);
     }
-
-//    public static Long generateEmail() {
-//        Random random = new Random();
-//        StringBuilder sb = new StringBuilder();
-//        while (sb.length() < ACCOUNT_NUMBER_LENGTH) {
-//            int digit = random.nextInt(10);
-//            sb.append(digit);
-//        }
-//        return Long.valueOf(sb.toString());
-//    }
 }

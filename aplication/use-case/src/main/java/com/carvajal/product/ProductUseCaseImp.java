@@ -10,11 +10,13 @@ import com.carvajal.product.properties.Slug;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RequiredArgsConstructor
 public class ProductUseCaseImp implements ProductUseCase {
 
     private final ProductRepository productRepository;
+    private BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
 
     @Override
     public Mono<Product> createProduct(Product product) {
@@ -24,9 +26,7 @@ public class ProductUseCaseImp implements ProductUseCase {
     }
 
     @Override
-    public Flux<Product> getProductAll() {
-        return productRepository.getProductAll();
-    }
+    public Flux<Product> getProductAll() { return productRepository.getProductAll(); }
 
     @Override
     public Mono<Product> getProductBySlug(String slug) {

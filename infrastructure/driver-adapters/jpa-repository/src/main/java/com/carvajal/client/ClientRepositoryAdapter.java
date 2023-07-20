@@ -26,43 +26,8 @@ public class ClientRepositoryAdapter implements ClientRepository {
     }
 
     @Override
-    public Mono<Client> findByEmail(Long client) {
-        return repository.findByEmail(client)
-                .map(mapper::toDomainModel);
-    }
-
-    @Override
-    public Mono<Integer> update(Client client) {
-        return repository.existsById(client.getId().getValue())
-                .flatMap(exists -> {
-                    if(exists){
-                        return Mono.just(client)
-                                .flatMap(mapper::toUpdateEntityData)
-                                .flatMap(c->{
-                                    repository.updateFieldsByEmail(
-                                            c.getPassword(),
-                                            c.getId()
-                                    )
-                                            .subscribe(integer -> {
-                                                System.out.println(integer);
-                                            });
-
-                                    return Mono.just(1);
-                                });
-                    }
-                    return Mono.empty();
-                });
-    }
-
-    @Override
-    public Mono<Boolean> deleteById(Long email) {
+    public Mono<Client> findByEmail(String email) {
         return repository.findByEmail(email)
-                .flatMap(client -> {
-                    if(client != null){
-                        repository.deleteClient(email).subscribe();
-                        return Mono.just(true);
-                    }
-                    return Mono.just(false);
-                });
+                .map(mapper::toDomainModel);
     }
 }

@@ -38,7 +38,7 @@ public class ClientController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<?> getClientById(@PathVariable Long email) {
+    public ResponseEntity<?> getClientByEmail(@PathVariable String email) {
         try {
             SecurityContextHolder.getContext().getAuthentication();
 
@@ -46,43 +46,6 @@ public class ClientController {
 
             if(result == null) return ResponseHandler.success( "Client not found");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());
-        }catch (IllegalArgumentException e){
-            logger.info(e.getMessage());
-            return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseHandler.error("Internal server error");
-        }
-    }
-
-    @PatchMapping()
-    public ResponseEntity<?> updateClient(@RequestBody Client client) {
-        try {
-            SecurityContextHolder.getContext().getAuthentication();
-
-            Client result = clientService.updateClient(client).block();
-
-            if(result == null) return ResponseHandler.success( "Could not update client");
-            return ResponseHandler.success("Success", mapper.toEntityData(result).block());
-        }catch (IllegalArgumentException e){
-            logger.info(e.getMessage());
-            return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
-            logger.info(e.getMessage());
-            return ResponseHandler.error("Internal server error");
-        }
-    }
-
-    @DeleteMapping("/{email}")
-    public ResponseEntity<?> deleteClient(@PathVariable Long email) {
-        logger.info("Client: deleting client {}", email);
-        try {
-            SecurityContextHolder.getContext().getAuthentication();
-
-            Boolean result = clientService.deleteClient(email).block();
-
-            if(!result) return ResponseHandler.success( "Can't delete client");
-            return ResponseHandler.success("Success");
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());

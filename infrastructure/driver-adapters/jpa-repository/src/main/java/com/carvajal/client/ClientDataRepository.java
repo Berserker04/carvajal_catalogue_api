@@ -7,10 +7,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ClientDataRepository extends ReactiveCrudRepository<ClientData, Long> {
-    Mono<ClientData> findByEmail(Long idClient);
-    @Query("UPDATE clients SET password = :?, address = :?, cellPhone = :?, gender = :? WHERE id = :?")
-    Mono<Integer> updateFieldsByEmail(String password, Long idClient);
-
-    @Query("UPDATE clients SET state = 'False' WHERE email = :?")
-    Mono<Integer> deleteClient(Long idClient);
+    @Query("SELECT * FROM users WHERE email = :?")
+    Mono<ClientData> findByEmail(String email);
 }

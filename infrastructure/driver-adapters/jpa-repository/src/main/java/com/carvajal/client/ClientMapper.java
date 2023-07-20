@@ -1,6 +1,7 @@
 package com.carvajal.client;
 
 import com.carvajal.client.properties.Email;
+import com.carvajal.client.properties.FullName;
 import com.carvajal.client.properties.Password;
 import com.carvajal.client.properties.Role;
 import com.carvajal.commons.properties.Id;
@@ -36,12 +37,8 @@ public class ClientMapper {
 
     public final Client toDomainModel(ClientData clientData) {
         return new Client(
-//                new Address(clientData.getAddress()),
-//                new CellPhone(clientData.getCellPhone()),
-//                new Gender(clientData.getGender()),
                 new Id(clientData.getId()),
-//                new Identification(clientData.getIdentification()),
-//                new FullName(clientData.getFullName()),
+                new FullName(clientData.getFullName()),
                 new Email(clientData.getEmail()),
                 new Password(clientData.getPassword()),
                 new Role(clientData.getRole()),
