@@ -10,6 +10,12 @@ import com.carvajal.product.ProductRepositoryAdapter;
 import com.carvajal.product.ProductUseCaseImp;
 import com.carvajal.product.gatewey.out.ProductRepository;
 import com.carvajal.product.services.ProductService;
+import com.carvajal.shared.mappers.ProductMapperShared;
+import com.carvajal.wishlist.WishListMapper;
+import com.carvajal.wishlist.WishListRepositoryAdapter;
+import com.carvajal.wishlist.WishListUseCaseImp;
+import com.carvajal.wishlist.gatewey.out.WishListRepository;
+import com.carvajal.wishlist.services.WishListService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -42,6 +48,11 @@ public class UseCaseConfig {
         return new ProductMapper();
     }
 
+    @Bean
+    public ProductMapperShared productMapperShared(){
+        return new ProductMapperShared();
+    }
+
     @Bean("productServicePrimary")
     @Primary
     public ProductService productService(ProductRepository accountRepository) {
@@ -53,5 +64,24 @@ public class UseCaseConfig {
     @Bean
     public ProductRepository accountRepository(ProductRepositoryAdapter productRepositoryAdapter){
         return productRepositoryAdapter;
+    }
+
+    //WishList
+    @Bean
+    public WishListMapper wishListMapper(){
+        return new WishListMapper();
+    }
+
+    @Bean("wishListServicePrimary")
+    @Primary
+    public WishListService wishListService(WishListRepository wishListRepository) {
+        return new WishListService(
+                new WishListUseCaseImp(wishListRepository)
+        );
+    }
+
+    @Bean
+    public WishListRepository wishListRepository(WishListRepositoryAdapter wishListRepositoryAdapter){
+        return wishListRepositoryAdapter;
     }
 }
