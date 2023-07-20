@@ -7,9 +7,8 @@ public class Image {
     private String value;
 
     public Image(String value) {
-        if(ValidateData.string(value, FIELD_NAME)){
-            this.value = value;
-        }
+        // Can be null
+        this.value = value;
     }
 
     public String getValue(){ return value; }

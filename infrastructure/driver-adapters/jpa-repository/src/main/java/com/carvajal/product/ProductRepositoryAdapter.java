@@ -5,6 +5,7 @@ import com.carvajal.client.gatewey.out.ClientRepository;
 import com.carvajal.product.gatewey.out.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -18,6 +19,12 @@ public class ProductRepositoryAdapter implements ProductRepository {
         return Mono.just(product)
                 .flatMap(mapper::toNewEntityData)
                 .flatMap(repository::save)
+                .map(mapper::toDomainModel);
+    }
+
+    @Override
+    public Flux<Product> getProductAll() {
+        return repository.findAll()
                 .map(mapper::toDomainModel);
     }
 

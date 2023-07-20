@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/products")
@@ -30,6 +33,27 @@ public class ProductController {
 
             if(result == null) return ResponseHandler.success( "Can't register product");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block(), HttpStatus.CREATED);
+        }catch (IllegalArgumentException e){
+            logger.info(e.getMessage());
+            return ResponseHandler.success(e.getMessage());
+        }catch (Exception e){
+            logger.info(e.getMessage());
+            return ResponseHandler.error("Internal server error");
+        }
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> getProductAll() {
+        logger.info("Product: get all");
+        try {
+            SecurityContextHolder.getContext().getAuthentication();
+
+            List<ProductData> result = productService.getProductAll()
+                    .flatMap(product -> mapper.toEntityData(product))
+                    .collect(Collectors.toList()).block();
+
+            if(result.size() == 0) return ResponseHandler.success("Products not found");
+            return ResponseHandler.success("Success", result);
         }catch (IllegalArgumentException e){
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());

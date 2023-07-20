@@ -23,9 +23,11 @@ public class ProductMapper {
     public final Mono<ProductData> toNewEntityData(Product product) {
         return Mono.just(ProductData.builder()
                 .name(product.getName().getValue())
+                .slug(product.getSlug().getValue())
                 .price(product.getPrice().getValue())
                 .image(product.getImage().getValue())
                 .stock(product.getStock().getValue())
+                .state(product.getState().getValue())
                 .build());
     }
 

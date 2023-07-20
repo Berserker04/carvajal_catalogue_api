@@ -5,6 +5,11 @@ import com.carvajal.client.ClientRepositoryAdapter;
 import com.carvajal.client.ClientUseCaseImp;
 import com.carvajal.client.gatewey.out.ClientRepository;
 import com.carvajal.client.services.ClientService;
+import com.carvajal.product.ProductMapper;
+import com.carvajal.product.ProductRepositoryAdapter;
+import com.carvajal.product.ProductUseCaseImp;
+import com.carvajal.product.gatewey.out.ProductRepository;
+import com.carvajal.product.services.ProductService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -31,60 +36,22 @@ public class UseCaseConfig {
         return clientRepositoryAdapter;
     }
 
-//    //Account
-//    @Bean
-//    public AccountMapper accountMapper(){
-//        return new AccountMapper();
-//    }
-//
-//    @Bean("accountServicePrimary")
-//    @Primary
-//    public AccountService accountService(AccountRepository accountRepository, ClientRepository clientRepository) {
-//        return new AccountService(
-//                new AccountUseCaseImp(accountRepository, clientRepository)
-//        );
-//    }
-//
-//    @Bean
-//    public AccountRepository accountRepository(AccountRepositoryAdapter accountRepositoryAdapter){
-//        return accountRepositoryAdapter;
-//    }
+    //Product
+    @Bean
+    public ProductMapper productMapper(){
+        return new ProductMapper();
+    }
 
-//    //Movement
-//    @Bean
-//    public MovementMapper movementMapper(){
-//        return new MovementMapper();
-//    }
-//
-//    @Bean("movementServicePrimary")
-//    @Primary
-//    public MovementService movementService(MovementRepository movementRepository, AccountRepository accountRepository) {
-//        return new MovementService(
-//                new MovementUseCaseImp(movementRepository, accountRepository)
-//        );
-//    }
-//
-//    @Bean
-//    public MovementRepository movementRepository(MovementRepositoryAdapter movementRepositoryAdapter){
-//        return movementRepositoryAdapter;
-//    }
+    @Bean("productServicePrimary")
+    @Primary
+    public ProductService productService(ProductRepository accountRepository) {
+        return new ProductService(
+                new ProductUseCaseImp(accountRepository)
+        );
+    }
 
-//    //Report
-//    @Bean
-//    public ReportMapper reportMapper(){
-//        return new ReportMapper();
-//    }
-//
-//    @Bean("reportServicePrimary")
-//    @Primary
-//    public ReportService reportService(ReportRepository reportRepository) {
-//        return new ReportService(
-//                new ReportUseCaseImp(reportRepository)
-//        );
-//    }
-//
-//    @Bean
-//    public ReportRepository reportRepository(ReportRepositoryAdapter reportRepositoryAdapter){
-//        return reportRepositoryAdapter;
-//    }
+    @Bean
+    public ProductRepository accountRepository(ProductRepositoryAdapter productRepositoryAdapter){
+        return productRepositoryAdapter;
+    }
 }
