@@ -28,6 +28,17 @@ https://hub.docker.com/layers/berserker04/carvajal_api/1.0/images/sha256:c519d34
 * Pin api
     * http://127.0.0.1:8080/api/v1/health
 
+# Test api
+* users credentials
+  * admin
+    * email: admin@example.com
+    * password: admin123
+  * client
+    * email: client@example.com
+    * password: client123
+
+
+
 # Framework
 Spring Boot: v3.1.1
 
