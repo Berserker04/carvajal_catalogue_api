@@ -25,8 +25,8 @@ public class ProductUseCaseImp implements ProductUseCase {
     }
 
     @Override
-    public Flux<ProductDto> getProductAll() {
-        return productRepository.getProductAll();
+    public Flux<ProductDto> getProductAll(Long userId) {
+        return productRepository.getProductAll(userId);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ProductUseCaseImp implements ProductUseCase {
                     if (result >= 1) {
                         return productRepository.findById(product.getId().getValue());
                     }
-                    return null;
+                    return Mono.empty();
                 });
     }
 

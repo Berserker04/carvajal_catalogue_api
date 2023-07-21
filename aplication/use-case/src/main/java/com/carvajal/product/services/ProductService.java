@@ -19,8 +19,8 @@ public class ProductService implements ProductUseCase {
     }
 
     @Override
-    public Flux<ProductDto> getProductAll() {
-        return productUseCase.getProductAll();
+    public Flux<ProductDto> getProductAll(Long userId) {
+        return productUseCase.getProductAll(userId);
     }
 
     @Override

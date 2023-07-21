@@ -44,20 +44,26 @@ public class ClientController {
 
 
     @GetMapping("/{email}")
-    public ResponseEntity<?> getClientByEmail(@PathVariable String email) {
-        try {
-            SecurityContextHolder.getContext().getAuthentication();
+    public Mono<ResponseEntity<?>> getClientByEmail(@PathVariable String email) {
+        logger.info("Getting client by email: {}", email);
 
-            Client result = clientService.getClientByEmail(email).block();
-
-            if (result == null) return ResponseHandler.success("Client not found");
-            return ResponseHandler.success("Success", mapper.toEntityData(result).block());
-        } catch (IllegalArgumentException e) {
-            logger.info(e.getMessage());
-            return ResponseHandler.success(e.getMessage());
-        } catch (Exception e) {
-            logger.info(e.getMessage());
-            return ResponseHandler.error("Internal server error");
-        }
+        return clientService.getClientByEmail(email)
+                .flatMap(result -> {
+                    if (result == null) {
+                        return Mono.just(ResponseHandler.success("Client not found"));
+                    } else {
+                        return mapper.toEntityData(result)
+                                .map(entityData -> ResponseEntity.ok(ResponseHandler.success("Success", entityData)));
+                    }
+                })
+                .onErrorResume(IllegalArgumentException.class, e -> {
+                    logger.info(e.getMessage());
+                    return Mono.just(ResponseHandler.success(e.getMessage()));
+                })
+                .onErrorResume(Exception.class, e -> {
+                    logger.info(e.getMessage());
+                    return Mono.just(ResponseHandler.error("Internal server error"));
+                });
     }
+
 }

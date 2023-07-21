@@ -15,63 +15,39 @@ public interface WishListDataRepository  extends ReactiveCrudRepository<WishList
     @Query("UPDATE wish_lists SET state = 'removed' WHERE state = 'active' AND \"userId\" = $1 AND \"productId\" = $2")
     Mono<Integer> deleteProduct(Long userId, Long productId);
 
-    @Query("SELECT \n" +
+    @Query("SELECT DISTINCT ON (p.id)\n" +
             "    p.*,\n" +
-            "    CASE \n" +
-            "        WHEN wl.\"productId\" = p.id  THEN True\n" +
-            "        ELSE False\n" +
-            "    END AS isLike\n" +
+            "    COALESCE(wl.\"productId\" = p.id, false) AS isLike\n" +
             "FROM products p\n" +
-            "LEFT JOIN wish_lists wl\n" +
-            "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = $1 \n" +
-            "AND wl.\"productId\" = $2 \n" +
-            "AND wl.state = 'active' \n" +
+            "INNER JOIN wish_lists wl ON p.id = wl.\"productId\" AND wl.\"userId\" = $1 AND wl.state = 'active'\n" +
+            "WHERE p.id = $2\n" +
             "ORDER BY p.id ASC")
     Flux<ProductData> findProductsByIdAndIsActive(Long userId, Long productId);
 
-    @Query("SELECT \n" +
+    @Query("SELECT DISTINCT ON (p.id)\n" +
             "    p.*,\n" +
-            "    CASE \n" +
-            "        WHEN wl.\"productId\" = p.id  THEN True\n" +
-            "        ELSE False\n" +
-            "    END AS isLike\n" +
+            "    COALESCE(wl.\"productId\" = p.id, false) AS isLike\n" +
             "FROM products p\n" +
-            "LEFT JOIN wish_lists wl\n" +
-            "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = $1 \n" +
-            "AND wl.state = 'active' \n" +
-            "AND p.stock > 0\n" +
-            "ORDER BY p.id ASC")
+            "INNER JOIN wish_lists wl ON p.id = wl.\"productId\" AND wl.\"userId\" = $1 AND wl.state = 'active'\n" +
+            "WHERE p.stock > 0\n" +
+            "ORDER BY p.id ASC;\n")
     Flux<ProductData> findProductsByState(Long userId);
 
-    @Query("SELECT \n" +
+    @Query("SELECT DISTINCT ON (p.id)\n" +
             "    p.*,\n" +
-            "    CASE \n" +
-            "        WHEN wl.\"productId\" = p.id  THEN True\n" +
-            "        ELSE False\n" +
-            "    END AS isLike\n" +
+            "    COALESCE(wl.\"productId\" = p.id, false) AS isLike\n" +
             "FROM products p\n" +
-            "LEFT JOIN wish_lists wl\n" +
-            "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = $1 \n" +
-            "AND wl.state = 'removed' \n" +
-            "ORDER BY p.id ASC")
+            "INNER JOIN wish_lists wl ON p.id = wl.\"productId\" AND wl.\"userId\" = $1 AND wl.state = 'removed'\n" +
+            "ORDER BY p.id ASC;\n")
     Flux<ProductData> findProductsByRemoved(Long userId);
 
-    @Query("SELECT \n" +
+    @Query("SELECT DISTINCT ON (p.id)\n" +
             "    p.*,\n" +
-            "    CASE \n" +
-            "        WHEN wl.\"productId\" = p.id THEN True\n" +
-            "        ELSE False\n" +
-            "    END AS isLike\n" +
+            "    COALESCE(wl.\"productId\" = p.id, false) AS isLike\n" +
             "FROM products p\n" +
-            "LEFT JOIN wish_lists wl\n" +
-            "ON p.id = wl.\"productId\"\n" +
-            "WHERE wl.\"userId\" = $1 \n" +
-            "AND wl.state = 'active'\n" +
-            "AND p.stock = 0\n" +
-            "ORDER BY wl.id ASC")
+            "INNER JOIN wish_lists wl ON p.id = wl.\"productId\" AND wl.\"userId\" = $1 AND wl.state = 'active'\n" +
+            "WHERE p.stock = 0\n" +
+            "ORDER BY p.id ASC;\n")
     Flux<ProductData> findProductsWithEmptyStock(Long userId);
 
 }
