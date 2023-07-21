@@ -1,6 +1,6 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/carvajal
+    url: r2dbc:postgresql://carvajal_db/carvajal
     username: c9ba0d41b19f917f6f853f5adaf185d0
     password: 8165c6fcfc2d73314e9e3713500856d6
 
