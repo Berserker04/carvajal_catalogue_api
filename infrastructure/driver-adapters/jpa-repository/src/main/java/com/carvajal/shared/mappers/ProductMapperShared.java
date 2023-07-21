@@ -24,7 +24,7 @@ public class ProductMapperShared {
         );
     }
 
-    public final Mono<ProductResponse> toDomainResponseModel(Product product) {
+    public final Mono<ProductResponse> toDomainResponseModel(ProductDto product) {
         return Mono.just(ProductResponse.builder()
                 .id(product.getId().getValue())
                 .name(product.getName().getValue())
@@ -33,6 +33,7 @@ public class ProductMapperShared {
                 .image(product.getImage().getValue())
                 .stock(product.getStock().getValue())
                 .state(product.getState().getValue())
+                .isLike(product.getIsLike().getValue())
                 .build());
     }
 }

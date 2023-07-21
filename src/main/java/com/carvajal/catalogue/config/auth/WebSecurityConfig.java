@@ -42,15 +42,6 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/api/v1/clients/{email}").authenticated()
                         .requestMatchers(HttpMethod.PATCH,"/api/v1/clients").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/v1/clients/{email}").hasRole("ADMIN")
-//
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/accounts").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.GET,"/api/v1/accounts/{accountNumber}").authenticated()
-//                        .requestMatchers(HttpMethod.DELETE,"/api/v1/accounts/{accountNumber}").hasRole("ADMIN")
-//
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/movements").authenticated()
-//                        .requestMatchers(HttpMethod.GET,"/api/v1/movements/{email}").authenticated()
-//                        .requestMatchers(HttpMethod.GET,"/api/v1/movements/all").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE,"/api/v1/movements/{id}").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

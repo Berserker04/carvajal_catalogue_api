@@ -17,7 +17,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
     private final ProductDataRepository repository;
 
     @Override
-    public Mono<Product> save(Product product) {
+    public Mono<ProductDto> save(Product product) {
         return Mono.just(product)
                 .flatMap(mapper::toNewEntityData)
                 .flatMap(repository::save)
@@ -31,7 +31,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public Mono<Product> findById(Long id) {
+    public Mono<ProductDto> findById(Long id) {
         return repository.findById(id)
                 .map(mapperShared::toDomainDtoModel);
     }

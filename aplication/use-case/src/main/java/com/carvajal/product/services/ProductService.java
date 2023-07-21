@@ -14,7 +14,7 @@ public class ProductService implements ProductUseCase {
     private final ProductUseCase productUseCase;
 
     @Override
-    public Mono<Product> createProduct(Product product) {
+    public Mono<ProductDto> createProduct(Product product) {
         return productUseCase.createProduct(product);
     }
 
@@ -29,7 +29,7 @@ public class ProductService implements ProductUseCase {
     }
 
     @Override
-    public Mono<Product> updateProduct(Product product) {
+    public Mono<ProductDto> updateProduct(Product product) {
         return productUseCase.updateProduct(product);
     }
 

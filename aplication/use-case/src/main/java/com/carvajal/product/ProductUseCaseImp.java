@@ -18,7 +18,7 @@ public class ProductUseCaseImp implements ProductUseCase {
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public Mono<Product> createProduct(Product product) {
+    public Mono<ProductDto> createProduct(Product product) {
         product.setSlug(new Slug(ConvertString.slug(product.getName().getValue())));
         product.setState(new State("active"));
         return productRepository.save(product);
@@ -35,7 +35,7 @@ public class ProductUseCaseImp implements ProductUseCase {
     }
 
     @Override
-    public Mono<Product> updateProduct(Product product) {
+    public Mono<ProductDto> updateProduct(Product product) {
         product.setSlug(new Slug(ConvertString.slug(product.getName().getValue())));
         return productRepository.update(product)
                 .flatMap(result -> {
