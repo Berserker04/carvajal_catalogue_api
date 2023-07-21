@@ -1,6 +1,5 @@
 package com.carvajal.wishlist.gatewey.out;
 
-import com.carvajal.product.Product;
 import com.carvajal.product.dto.ProductDto;
 import com.carvajal.wishlist.WishList;
 import reactor.core.publisher.Flux;

@@ -1,7 +1,5 @@
 package com.carvajal.product;
 
-import com.carvajal.client.gatewey.out.ClientRepository;
-import com.carvajal.client.properties.Password;
 import com.carvajal.commons.properties.State;
 import com.carvajal.helpers.ConvertString;
 import com.carvajal.product.dto.ProductDto;
@@ -17,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ProductUseCaseImp implements ProductUseCase {
 
     private final ProductRepository productRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public Mono<Product> createProduct(Product product) {
@@ -27,20 +25,24 @@ public class ProductUseCaseImp implements ProductUseCase {
     }
 
     @Override
-    public Flux<ProductDto> getProductAll() { return productRepository.getProductAll(); }
+    public Flux<ProductDto> getProductAll(Long userId) {
+        return productRepository.getProductAll(userId);
+    }
 
     @Override
-    public Mono<ProductDto> getProductBySlug(Long userId, String slug) { return productRepository.findBySlug(userId, slug); }
+    public Mono<ProductDto> getProductBySlug(Long userId, String slug) {
+        return productRepository.findBySlug(userId, slug);
+    }
 
     @Override
     public Mono<Product> updateProduct(Product product) {
         product.setSlug(new Slug(ConvertString.slug(product.getName().getValue())));
         return productRepository.update(product)
-                .flatMap(result-> {
-                    if(result >= 1){
+                .flatMap(result -> {
+                    if (result >= 1) {
                         return productRepository.findById(product.getId().getValue());
                     }
-                    return null;
+                    return Mono.empty();
                 });
     }
 

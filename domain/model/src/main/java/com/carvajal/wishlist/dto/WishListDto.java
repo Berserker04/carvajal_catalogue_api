@@ -1,7 +1,5 @@
 package com.carvajal.wishlist.dto;
 
-import com.carvajal.product.Product;
-import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.dto.response.ProductResponse;
 import lombok.Getter;
 import lombok.Setter;

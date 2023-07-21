@@ -74,9 +74,9 @@ public class UseCaseConfig {
 
     @Bean("wishListServicePrimary")
     @Primary
-    public WishListService wishListService(WishListRepository wishListRepository) {
+    public WishListService wishListService(WishListRepository wishListRepository, ProductRepository accountRepository) {
         return new WishListService(
-                new WishListUseCaseImp(wishListRepository)
+                new WishListUseCaseImp(wishListRepository, accountRepository)
         );
     }
 

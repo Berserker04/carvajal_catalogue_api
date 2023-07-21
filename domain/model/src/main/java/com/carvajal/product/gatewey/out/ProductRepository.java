@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface ProductRepository {
     Mono<Product> save(Product client);
-    Flux<ProductDto> getProductAll();
+    Flux<ProductDto> getProductAll(Long userId);
     Mono<Product> findById(Long id);
     Mono<ProductDto> findBySlug(Long userId, String slug);
     Mono<Integer> update(Product product);

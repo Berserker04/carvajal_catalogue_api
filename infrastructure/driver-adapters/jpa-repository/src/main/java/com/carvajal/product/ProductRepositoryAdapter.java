@@ -25,8 +25,8 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public Flux<ProductDto> getProductAll() {
-        return repository.findAll()
+    public Flux<ProductDto> getProductAll(Long userId) {
+        return repository.findAll(userId)
                 .map(mapperShared::toDomainDtoModel);
     }
 
@@ -39,7 +39,9 @@ public class ProductRepositoryAdapter implements ProductRepository {
     @Override
     public Mono<ProductDto> findBySlug(Long userId, String slug) {
         return repository.findBySlug(userId, slug)
-                .map(mapperShared::toDomainDtoModel);
+                .map(mapperShared::toDomainDtoModel)
+                .switchIfEmpty(Mono.empty());
+
     }
 
     @Override

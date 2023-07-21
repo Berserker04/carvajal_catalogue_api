@@ -2,7 +2,6 @@ package com.carvajal.client;
 
 import com.carvajal.client.gatewey.in.ClientUseCase;
 import com.carvajal.client.gatewey.out.ClientRepository;
-import com.carvajal.client.properties.Email;
 import com.carvajal.client.properties.Password;
 import com.carvajal.client.properties.Role;
 import com.carvajal.commons.properties.State;
@@ -17,7 +16,6 @@ public class ClientUseCaseImp implements ClientUseCase {
     private final ClientRepository clientRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private static final int ACCOUNT_NUMBER_LENGTH = 10;
 
     @Override
     public Mono<Client> createClient(Client client) {
@@ -35,6 +33,6 @@ public class ClientUseCaseImp implements ClientUseCase {
     }
 
     public String encryptPassword(String password) {
-        return  bCryptPasswordEncoder.encode(password);
+        return bCryptPasswordEncoder.encode(password);
     }
 }

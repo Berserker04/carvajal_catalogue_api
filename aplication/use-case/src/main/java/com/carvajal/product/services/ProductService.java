@@ -1,6 +1,5 @@
 package com.carvajal.product.services;
 
-import com.carvajal.client.gatewey.in.ClientUseCase;
 import com.carvajal.product.Product;
 import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.gatewey.in.ProductUseCase;
@@ -13,12 +12,16 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class ProductService implements ProductUseCase {
     private final ProductUseCase productUseCase;
+
     @Override
     public Mono<Product> createProduct(Product product) {
         return productUseCase.createProduct(product);
     }
+
     @Override
-    public Flux<ProductDto> getProductAll() { return productUseCase.getProductAll(); }
+    public Flux<ProductDto> getProductAll(Long userId) {
+        return productUseCase.getProductAll(userId);
+    }
 
     @Override
     public Mono<ProductDto> getProductBySlug(Long userId, String slug) {
