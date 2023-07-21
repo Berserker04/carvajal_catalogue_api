@@ -3,6 +3,7 @@ package com.carvajal.auth.service;
 import com.carvajal.client.Client;
 import com.carvajal.client.gatewey.out.ClientRepository;
 import com.carvajal.client.properties.Email;
+import com.carvajal.commons.Constant;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -17,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final ClientRepository clientRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -28,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpSession session = attr.getRequest().getSession(true);
-        session.setAttribute("userSession", user);
+        session.setAttribute(Constant.KEY_USER_SESSION, user);
 
         return User
                 .withUsername(email)

@@ -1,14 +1,9 @@
 package com.carvajal.wishlist;
 
 import com.carvajal.client.Client;
-import com.carvajal.client.ClientController;
+import com.carvajal.commons.Constant;
 import com.carvajal.http.ResponseHandler;
-import com.carvajal.product.Product;
-import com.carvajal.product.ProductData;
-import com.carvajal.product.ProductMapper;
-import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.dto.response.ProductResponse;
-import com.carvajal.product.services.ProductService;
 import com.carvajal.shared.mappers.ProductMapperShared;
 import com.carvajal.wishlist.dto.WishListDto;
 import com.carvajal.wishlist.services.WishListService;
@@ -23,15 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/wishlists")
 public class WishListController {
-    private final WishListMapper mapper;
-    private final ProductMapper productMapper;
     private final ProductMapperShared productMapperShared;
     private final WishListService wishListService;
     private static final Logger logger = LoggerFactory.getLogger(WishListController.class);
@@ -41,7 +31,7 @@ public class WishListController {
         logger.info("product to wish list: add new product");
         try {
             SecurityContextHolder.getContext().getAuthentication();
-            Client client = (Client) session.getAttribute("userSession");
+            Client client = (Client) session.getAttribute(Constant.KEY_USER_SESSION);
 
             boolean result = wishListService.addProduct(client.getId().getValue(), productId).block();
 
@@ -61,7 +51,7 @@ public class WishListController {
         logger.info("Product: get all");
         try {
             SecurityContextHolder.getContext().getAuthentication();
-            Client client = (Client) session.getAttribute("userSession");
+            Client client = (Client) session.getAttribute(Constant.KEY_USER_SESSION);
 
             return wishListService.listProducts(client.getId().getValue())
                     .flatMap(wishlistT -> {
@@ -92,7 +82,7 @@ public class WishListController {
         logger.info("Product: deleting client {}", id);
         try {
             SecurityContextHolder.getContext().getAuthentication();
-            Client client = (Client) session.getAttribute("userSession");
+            Client client = (Client) session.getAttribute(Constant.KEY_USER_SESSION);
 
             Boolean result = wishListService.deleteProduct(client.getId().getValue(), id).block();
 

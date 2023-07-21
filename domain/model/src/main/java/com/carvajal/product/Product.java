@@ -2,7 +2,6 @@ package com.carvajal.product;
 
 import com.carvajal.commons.properties.Id;
 import com.carvajal.commons.properties.State;
-import com.carvajal.product.dto.properties.IsLike;
 import com.carvajal.product.properties.*;
 import lombok.Getter;
 import lombok.Setter;

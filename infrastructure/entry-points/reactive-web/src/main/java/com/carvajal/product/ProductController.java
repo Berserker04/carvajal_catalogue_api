@@ -1,9 +1,7 @@
 package com.carvajal.product;
 
-import com.carvajal.auth.service.UserDetailsServiceImpl;
 import com.carvajal.client.Client;
-import com.carvajal.client.ClientController;
-import com.carvajal.client.ClientData;
+import com.carvajal.commons.Constant;
 import com.carvajal.http.ResponseHandler;
 import com.carvajal.product.dto.ProductDto;
 import com.carvajal.product.services.ProductService;
@@ -13,10 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,12 +33,12 @@ public class ProductController {
 
             Product result = productService.createProduct(product).block();
 
-            if(result == null) return ResponseHandler.success( "Can't register product");
+            if (result == null) return ResponseHandler.success("Can't register product");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block(), HttpStatus.CREATED);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseHandler.error("Internal server error");
         }
@@ -54,18 +49,18 @@ public class ProductController {
         logger.info("Product: get all");
         try {
             SecurityContextHolder.getContext().getAuthentication();
-            Client client = (Client) session.getAttribute("userSession");
+            Client client = (Client) session.getAttribute(Constant.KEY_USER_SESSION);
 
             List<ProductData> result = productService.getProductAll()
                     .flatMap(product -> mapper.toEntityData(product))
                     .collect(Collectors.toList()).block();
 
-            if(result.size() == 0) return ResponseHandler.success("Products not found");
+            if (result.size() == 0) return ResponseHandler.success("Products not found");
             return ResponseHandler.success("Success", result);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseHandler.error("Internal server error");
         }
@@ -75,16 +70,16 @@ public class ProductController {
     public ResponseEntity<?> getProductBySlug(HttpSession session, @PathVariable String slug) {
         try {
             SecurityContextHolder.getContext().getAuthentication();
-            Client client = (Client) session.getAttribute("userSession");
+            Client client = (Client) session.getAttribute(Constant.KEY_USER_SESSION);
 
             ProductDto result = productService.getProductBySlug(client.getId().getValue(), slug).block();
 
-            if(result == null) return ResponseHandler.success( "Product not found");
+            if (result == null) return ResponseHandler.success("Product not found");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseHandler.error("Internal server error");
         }
@@ -97,12 +92,12 @@ public class ProductController {
 
             Product result = productService.updateProduct(product).block();
 
-            if(result == null) return ResponseHandler.success( "Could not update product");
+            if (result == null) return ResponseHandler.success("Could not update product");
             return ResponseHandler.success("Success", mapper.toEntityData(result).block());
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseHandler.error("Internal server error");
         }
@@ -116,12 +111,12 @@ public class ProductController {
 
             Boolean result = productService.deleteProduct(id).block();
 
-            if(!result) return ResponseHandler.success( "Can't delete Product");
+            if (!result) return ResponseHandler.success("Can't delete Product");
             return ResponseHandler.success("Success");
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             logger.info(e.getMessage());
             return ResponseHandler.success(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.info(e.getMessage());
             return ResponseHandler.error("Internal server error");
         }
