@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/clients")

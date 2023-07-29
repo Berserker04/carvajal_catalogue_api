@@ -45,7 +45,7 @@ public class WebSecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .cors(withDefaults())
+                .cors(cors -> cors.disable())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionConfig -> exceptionConfig
                         .accessDeniedHandler(accessDeniedHandler)

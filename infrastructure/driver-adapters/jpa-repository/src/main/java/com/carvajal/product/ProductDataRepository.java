@@ -27,11 +27,15 @@ public interface ProductDataRepository extends ReactiveCrudRepository<ProductDat
     Mono<Integer> deleteProduct(Long id);
 
     @Query("SELECT DISTINCT ON (p.id)\n" +
-            "    p.*,\n" +
-            "    COALESCE(wl.\"userId\" = $1, false) AS isLike\n" +
-            "FROM products p\n" +
-            "LEFT JOIN wish_lists wl ON p.id = wl.\"productId\"\n" +
-            "WHERE p.state = 'active'" +
-            "ORDER BY p.id ASC;")
+            "\t\tp.*,\n" +
+            "\t    COALESCE(wl.\"userId\" = $1, false) AS isLike\n" +
+            "\t\tFROM products p\n" +
+            "\t\tLEFT JOIN (\n" +
+            "\t\t\tSELECT DISTINCT ON (\"productId\") \"productId\", \"userId\"\n" +
+            "\t\t\tFROM wish_lists\n" +
+            "\t\t\tWHERE \"userId\" = 2\n" +
+            "\t\t) wl ON p.id = wl.\"productId\"\n" +
+            "\t\tWHERE p.state = 'active'\n" +
+            "\t\tORDER BY p.id ASC;")
     Flux<ProductData> findAll(Long userId);
 }
