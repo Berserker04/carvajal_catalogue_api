@@ -55,14 +55,15 @@ public class UseCaseConfig {
 
     @Bean("productServicePrimary")
     @Primary
-    public ProductService productService(ProductRepository accountRepository) {
+    public ProductService productService(ProductRepository productRepository) {
         return new ProductService(
-                new ProductUseCaseImp(accountRepository)
+                new ProductUseCaseImp(productRepository)
         );
     }
 
     @Bean
-    public ProductRepository accountRepository(ProductRepositoryAdapter productRepositoryAdapter){
+    @Primary
+    public ProductRepository productRepository(ProductRepositoryAdapter productRepositoryAdapter){
         return productRepositoryAdapter;
     }
 
@@ -74,9 +75,9 @@ public class UseCaseConfig {
 
     @Bean("wishListServicePrimary")
     @Primary
-    public WishListService wishListService(WishListRepository wishListRepository, ProductRepository accountRepository) {
+    public WishListService wishListService(WishListRepository wishListRepository, ProductRepository productRepository) {
         return new WishListService(
-                new WishListUseCaseImp(wishListRepository, accountRepository)
+                new WishListUseCaseImp(wishListRepository, productRepository)
         );
     }
 

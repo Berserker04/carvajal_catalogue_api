@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/wishlists")

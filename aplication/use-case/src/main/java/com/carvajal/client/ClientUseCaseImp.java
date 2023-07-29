@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
 
-import java.util.Random;
-
 @RequiredArgsConstructor
 public class ClientUseCaseImp implements ClientUseCase {
     private final ClientRepository clientRepository;
@@ -21,7 +19,6 @@ public class ClientUseCaseImp implements ClientUseCase {
     public Mono<Client> createClient(Client client) {
         String encodePassword = encryptPassword(client.getPassword().getValue());
         client.setPassword(new Password(encodePassword));
-//        client.setEmail(new Email(generateEmail()));
         client.setState(new State("Active"));
         client.setRole(new Role("CLIENT"));
         return clientRepository.save(client);
